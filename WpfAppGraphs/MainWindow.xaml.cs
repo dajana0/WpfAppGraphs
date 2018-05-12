@@ -23,18 +23,36 @@ namespace WpfAppGraphs
         public MainWindow()
         {
             InitializeComponent();
-            test();
+            test2();
         }
 
         public void test()
         {
-            TNode<int> root = new TNode<int>(1);
+            TNode root = new TNode(1);
             root.AddChild(2);
             root.children[0].AddChild(3);
             root.children[0].AddChild(4);
             root.children[0].children[1].AddChild(5);
             root.children[0].children[1].AddChild(6);
-            int count = TNode<int>.CountVertices(root);
+            int count = TNode.CountVertices(root);
+            TNode lowestNode = root.FindLowestLeaf();
+            var a = 0;
+        }
+
+
+        public void test2()
+        {
+            TNode root = new TNode(1);
+            root.AddChild(2);
+            root.children[0].AddChild(9);
+            root.AddChild(3);
+            root.AddChild(4);
+            root.AddChild(5);
+            root.AddChild(6);
+            root.AddChild(7);
+            root.AddChild(8);
+            int count = TNode.CountVertices(root);
+            TNode lowestNode = root.FindLowestLeaf();
             var a = 0;
         }
     }

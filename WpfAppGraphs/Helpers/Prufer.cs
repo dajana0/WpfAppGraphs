@@ -8,10 +8,12 @@ namespace WpfAppGraphs.Helpers
 {
     public class Prufer
     {
-        public int[] encode(TNode<int> tree)
+        public int[] encode(TNode tree)
         {
-            
-            int[] result = new int[0];
+            int n = TNode.CountVertices(tree);
+            TNode treeToDecode = tree;
+            TNode lowestNode = tree.FindLowestLeaf();
+            int[] result = new int[n - 2];
 
             return result;
         }

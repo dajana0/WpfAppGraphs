@@ -20,6 +20,20 @@ namespace WpfAppGraphs
         {
             return children.Where(x => x.label == label).FirstOrDefault();
         }
+        public TNode FindChild(int label)
+        {
+            if(this.label == label)
+            {
+                return this;
+            }
+            foreach (TNode child in children)
+            {
+                var res = child.FindChild(label);
+                if (res !=null)
+                    return res;
+            }
+            return null;
+        }
         public TNode AddChild(int label)
         {
             var node = new TNode(label) { Parent = this };
@@ -47,11 +61,11 @@ namespace WpfAppGraphs
             
             if (children.Count == 0) return this;
 
-            TNode currentNode = GetLowestNode(this);
-
+            TNode currentNode = GetLowestNode(this, null);
+            //sprawdzenie dla dzieci
             for (var x = 0; x< children.Count; x++)
             {
-                TNode childLowestNode = GetLowestNode(children[x]);
+                TNode childLowestNode = GetLowestNode(children[x], currentNode);
                 if (childLowestNode != null)
                 {
                     if(childLowestNode.label < currentNode.label)
@@ -64,37 +78,41 @@ namespace WpfAppGraphs
 
            
         }
-        private  TNode GetLowestNode(TNode node)
+        private  TNode GetLowestNode(TNode node , TNode currentLowest)
         {
-            if ((node.Parent == null && node.children.Count == 1) || (node.Parent != null && node.children.Count == 0))
-                return node;
+            if (currentLowest == null || (node.label < currentLowest.label)) {
+                if (((node.Parent == null && node.children.Count == 1) || (node.Parent != null && node.children.Count == 0)))
+                    return node;
+            }
+            TNode res = null;
             foreach (var child in node.children)
             {
-                return GetLowestNode(child);
+
+                res = GetLowestNode(child, currentLowest);
+
+                if (currentLowest == null || (res != null && currentLowest.label > res.label))
+                {
+                    currentLowest = res;
+                }
             }
-            return null;
+            return currentLowest;
         }
 
-        public void RemoveNodeFormTree(TNode node)
+        public TNode RemoveNodeFormTree(TNode node)
         {
-            if (this.label == node.label)
+            TNode current = node;
+            foreach (var child in current.children)
             {
-                Parent = null;
-                label = null;
-                children.Clear();
-            }
-            foreach (var child in node.children)
-            {
-                if (child == node)
+                if (child.label == node.label)
                 {
-                    node.children.Remove(child);
+                    current.children.RemoveAll(x => x.label == node.label);
                 }
                 RemoveNodeFormTree(child);
 
             }
+            return current;
         }
 
-  
 
     }
 }

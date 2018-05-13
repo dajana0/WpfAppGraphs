@@ -33,14 +33,45 @@ namespace WpfAppGraphs.Helpers
                 {
                     nearestNeighbor.RemoveChild(lowestNode);
                 }
-                treeToDecode = nearestNeighbor;
+                if(lowestNode.Parent != null)
+                    lowestNode.Parent.RemoveChild(lowestNode);
+                else if (lowestNode == treeToDecode)
+                {
+                    treeToDecode = treeToDecode.children[0];
+                }
+
             }
             return result;
         }
 
-        public TNode decode(int[] sequence)
+        public TNode decode(List<int> sequence)
         {
-            return null;
+            TNode root = new TNode(sequence.FirstOrDefault());
+            List<int> b = new List<int>();
+            for(int x = 1; x <= sequence.Count + 2; x++)
+            {
+                b.Add(x);
+            }
+            List<int> copySequence = sequence.ToList();
+            for(int x = 0; x <= sequence.Count + 3; x++)
+            {
+                int node = b.Where(y => !sequence.Any(y2 => y2 == y)).Min();
+                TNode nodeToLink = root.FindChild(sequence.First());
+                if(nodeToLink == null)
+                {
+                    nodeToLink = root.FindChild(b.First());
+                    nodeToLink.AddChild(sequence.First());
+                }
+                else
+                {
+                    nodeToLink.AddChild(node);
+                }
+                sequence.Remove(sequence.First());
+                b.Remove(node);
+            }
+
+            root.FindChild(b.First()).AddChild(b[1]);
+            return root;
         }
     }
 }

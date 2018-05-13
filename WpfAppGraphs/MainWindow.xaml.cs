@@ -24,7 +24,14 @@ namespace WpfAppGraphs
         public MainWindow()
         {
             InitializeComponent();
-            test3();
+            // test();
+            // test2();
+            // test3();
+            //test4();
+            //test5();
+            //test6();
+            //test7();
+            a3();
         }
 
         public void test()
@@ -70,8 +77,7 @@ namespace WpfAppGraphs
             root.children[0].children[0].AddChild(5);
             root.children[0].children[0].AddChild(2);
             root.children[0].children[0].AddChild(3);
-            int count = TNode.CountVertices(root);
-            TNode lowestNode = root.FindLowestLeaf();
+
             var a = 0;
 
             Prufer pruf = new Prufer();
@@ -87,12 +93,66 @@ namespace WpfAppGraphs
             root.children[0].AddChild(6);
             root.children[0].AddChild(5);
             root.children[0].AddChild(4);
-            int count = TNode.CountVertices(root);
-            TNode lowestNode = root.FindLowestLeaf();
-            var a = 0;
 
             Prufer pruf = new Prufer();
             int[] result = pruf.encode(root);
+        }
+
+        public void test5()
+        {
+            TNode root = new TNode(5);
+            root.AddChild(1);
+            root.AddChild(4);
+            root.children[0].AddChild(2);
+            root.children[0].AddChild(3);
+
+            Prufer pruf = new Prufer();
+            int[] result = pruf.encode(root);
+        }
+
+        public void test6()
+        {
+            TNode root = new TNode(5);
+            root.AddChild(2);
+            root.children[0].AddChild(3);
+            root.children[0].AddChild(4);
+            root.children[0].children[1].AddChild(1);
+            root.children[0].children[1].AddChild(6);
+
+            Prufer pruf = new Prufer();
+            int[] result = pruf.encode(root);
+        }
+        public void test7()
+        {
+            TNode root = new TNode(1);
+            root.AddChild(4);
+            root.children[0].AddChild(2);
+            root.children[0].AddChild(3);
+            root.children[0].AddChild(5);
+            root.children[0].children[2].AddChild(6);
+
+            Prufer pruf = new Prufer();
+            int[] result = pruf.encode(root);
+        }
+        public void a1()
+        {
+            List<int> sequence = new List<int>() { 1, 2, 3, 4 };
+            Prufer pruf = new Prufer();
+            TNode result = pruf.decode(sequence);
+        }
+
+        public void a2()
+        {
+            List<int> sequence = new List<int>() { 1, 2, 3, 4 };
+            Prufer pruf = new Prufer();
+            TNode result = pruf.decode(sequence);
+        }
+
+        public void a3()
+        {
+            List<int> sequence = new List<int>() { 3, 3, 3, 3,3 };
+            Prufer pruf = new Prufer();
+            TNode result = pruf.decode(sequence);
         }
     }
 }

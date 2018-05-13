@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfAppGraphs.Helpers;
 
 namespace WpfAppGraphs
 {
@@ -23,7 +24,7 @@ namespace WpfAppGraphs
         public MainWindow()
         {
             InitializeComponent();
-            test2();
+            test3();
         }
 
         public void test()
@@ -31,12 +32,14 @@ namespace WpfAppGraphs
             TNode root = new TNode(1);
             root.AddChild(2);
             root.children[0].AddChild(3);
-            root.children[0].AddChild(4);
-            root.children[0].children[1].AddChild(5);
+            root.children[0].AddChild(5);
+            root.children[0].children[1].AddChild(4);
             root.children[0].children[1].AddChild(6);
             int count = TNode.CountVertices(root);
-            TNode lowestNode = root.FindLowestLeaf();
-            var a = 0;
+
+            Prufer pruf = new Prufer();
+            int[] result = pruf.encode(root);
+            var ad = 1;
         }
 
 
@@ -54,6 +57,42 @@ namespace WpfAppGraphs
             int count = TNode.CountVertices(root);
             TNode lowestNode = root.FindLowestLeaf();
             var a = 0;
+
+            Prufer pruf = new Prufer();
+            int[] result = pruf.encode(root);
+        }
+
+        public void test3()
+        {
+            TNode root = new TNode(6);
+            root.AddChild(1);
+            root.children[0].AddChild(4);
+            root.children[0].children[0].AddChild(5);
+            root.children[0].children[0].AddChild(2);
+            root.children[0].children[0].AddChild(3);
+            int count = TNode.CountVertices(root);
+            TNode lowestNode = root.FindLowestLeaf();
+            var a = 0;
+
+            Prufer pruf = new Prufer();
+            int[] result = pruf.encode(root);
+        }
+
+        public void test4()
+        {
+            TNode root = new TNode(2);
+            root.AddChild(3);
+            root.children[0].AddChild(1);
+            root.children[0].AddChild(7);
+            root.children[0].AddChild(6);
+            root.children[0].AddChild(5);
+            root.children[0].AddChild(4);
+            int count = TNode.CountVertices(root);
+            TNode lowestNode = root.FindLowestLeaf();
+            var a = 0;
+
+            Prufer pruf = new Prufer();
+            int[] result = pruf.encode(root);
         }
     }
 }

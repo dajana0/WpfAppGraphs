@@ -8,7 +8,7 @@ namespace WpfAppGraphs
 {
     public class TNode
     {
-        public int label;
+        public int? label;
         public List<TNode> children = new List<TNode>();
         public TNode Parent { get; set; }
         public TNode(int label)
@@ -26,21 +26,20 @@ namespace WpfAppGraphs
             children.Add(node);
             return node;
         }
-        public bool RemoveChild(TNode node)
+        public void RemoveChild(TNode node)
         {
-            return children.Remove(node);
+
+            children.RemoveAll(x => x.label == node.label);
         }
+
         public static int CountVertices(TNode node)
         {
+            int counter = 1;
             foreach (var child in node.children)
             {
-                return  node.children.Count + CountVertices(child) + 1;
+                counter += CountVertices(child) ;
             }
-            return 1;
-        }
-        public override bool Equals(object obj)
-        {
-            return (label > ((TNode)obj).label);
+            return counter;
         }
 
         public  TNode FindLowestLeaf()
@@ -48,9 +47,9 @@ namespace WpfAppGraphs
             
             if (children.Count == 0) return this;
 
-            TNode currentNode = GetLowestNode(children[0]);
+            TNode currentNode = GetLowestNode(this);
 
-            for (var x = 1; x< children.Count; x++)
+            for (var x = 0; x< children.Count; x++)
             {
                 TNode childLowestNode = GetLowestNode(children[x]);
                 if (childLowestNode != null)
@@ -75,6 +74,27 @@ namespace WpfAppGraphs
             }
             return null;
         }
+
+        public void RemoveNodeFormTree(TNode node)
+        {
+            if (this.label == node.label)
+            {
+                Parent = null;
+                label = null;
+                children.Clear();
+            }
+            foreach (var child in node.children)
+            {
+                if (child == node)
+                {
+                    node.children.Remove(child);
+                }
+                RemoveNodeFormTree(child);
+
+            }
+        }
+
+  
 
     }
 }

@@ -22,7 +22,7 @@ namespace WpfAppGraphs.Helpers
             for(int x = 0; x < n - 2; x++)
             {
                 TNode lowestNode = treeToDecode.FindLowestLeaf();
-                TNode nearestNeighbor = lowestNode.Parent == null ? lowestNode.children[0] : lowestNode.Parent;
+                TNode nearestNeighbor = lowestNode.Parent == null ? lowestNode.Children[0] : lowestNode.Parent;
                 result[x] = (int)nearestNeighbor.label;
      
                 if(nearestNeighbor.Parent == lowestNode)
@@ -37,7 +37,7 @@ namespace WpfAppGraphs.Helpers
                     lowestNode.Parent.RemoveChild(lowestNode);
                 else if (lowestNode == treeToDecode)
                 {
-                    treeToDecode = treeToDecode.children[0];
+                    treeToDecode = treeToDecode.Children[0];
                 }
 
             }
@@ -53,7 +53,9 @@ namespace WpfAppGraphs.Helpers
                 b.Add(x);
             }
             List<int> copySequence = sequence.ToList();
-            for(int x = 0; x <= sequence.Count + 3; x++)
+
+          //  for(int x = 0; x <= sequence.Count + 3; x++)
+            while(b.Count>2)
             {
                 int node = b.Where(y => !sequence.Any(y2 => y2 == y)).Min();
                 TNode nodeToLink = root.FindChild(sequence.First());
@@ -70,7 +72,18 @@ namespace WpfAppGraphs.Helpers
                 b.Remove(node);
             }
 
-            root.FindChild(b.First()).AddChild(b[1]);
+            TNode lastChild = root.FindChild(b.First());
+            if(lastChild != null)
+            {
+                lastChild.AddChild(b[1]);
+            }
+            else
+            {
+                root.FindChild(b[1]).AddChild(b[1]);
+            }
+                
+                
+                
             return root;
         }
     }

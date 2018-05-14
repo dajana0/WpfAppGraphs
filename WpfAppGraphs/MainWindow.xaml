@@ -3,10 +3,25 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:self="clr-namespace:WpfAppGraphs"
         xmlns:local="clr-namespace:WpfAppGraphs"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+        Title="MainWindow" Height="504" Width="799">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <TreeView Name="graph" FontSize="18" Margin="0,77,10,0" Grid.ColumnSpan="2" FontWeight="Bold" Background="#FFA8A8A8" >
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type self:TNode}" ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Label}" PreviewTextInput="TextBlock_PreviewTextInput" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="51,27,0,0" TextWrapping="Wrap"  Text="" VerticalAlignment="Top" Width="448" TextChanged="TextBox_TextChanged"/>
+
     </Grid>
 </Window>

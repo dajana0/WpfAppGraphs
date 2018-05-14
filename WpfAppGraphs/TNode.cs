@@ -8,17 +8,25 @@ namespace WpfAppGraphs
 {
     public class TNode
     {
+        public string Label
+        {
+            get
+            {
+                return label.ToString();
+            }
+        }
         public int? label;
-        public List<TNode> children = new List<TNode>();
+        public List<TNode> Children { get; set; }
         public TNode Parent { get; set; }
         public TNode(int label)
         {
+            Children = new List<TNode>();
             this.label = label;
         }
 
         public TNode GetChild(int label)
         {
-            return children.Where(x => x.label == label).FirstOrDefault();
+            return Children.Where(x => x.label == label).FirstOrDefault();
         }
         public TNode FindChild(int label)
         {
@@ -26,7 +34,7 @@ namespace WpfAppGraphs
             {
                 return this;
             }
-            foreach (TNode child in children)
+            foreach (TNode child in Children)
             {
                 var res = child.FindChild(label);
                 if (res !=null)
@@ -37,19 +45,19 @@ namespace WpfAppGraphs
         public TNode AddChild(int label)
         {
             var node = new TNode(label) { Parent = this };
-            children.Add(node);
+            Children.Add(node);
             return node;
         }
         public void RemoveChild(TNode node)
         {
 
-            children.RemoveAll(x => x.label == node.label);
+            Children.RemoveAll(x => x.label == node.label);
         }
 
         public static int CountVertices(TNode node)
         {
             int counter = 1;
-            foreach (var child in node.children)
+            foreach (var child in node.Children)
             {
                 counter += CountVertices(child) ;
             }
@@ -59,13 +67,13 @@ namespace WpfAppGraphs
         public  TNode FindLowestLeaf()
         {
             
-            if (children.Count == 0) return this;
+            if (Children.Count == 0) return this;
 
             TNode currentNode = GetLowestNode(this, null);
             //sprawdzenie dla dzieci
-            for (var x = 0; x< children.Count; x++)
+            for (var x = 0; x< Children.Count; x++)
             {
-                TNode childLowestNode = GetLowestNode(children[x], currentNode);
+                TNode childLowestNode = GetLowestNode(Children[x], currentNode);
                 if (childLowestNode != null)
                 {
                     if(childLowestNode.label < currentNode.label)
@@ -81,11 +89,11 @@ namespace WpfAppGraphs
         private  TNode GetLowestNode(TNode node , TNode currentLowest)
         {
             if (currentLowest == null || (node.label < currentLowest.label)) {
-                if (((node.Parent == null && node.children.Count == 1) || (node.Parent != null && node.children.Count == 0)))
+                if (((node.Parent == null && node.Children.Count == 1) || (node.Parent != null && node.Children.Count == 0)))
                     return node;
             }
             TNode res = null;
-            foreach (var child in node.children)
+            foreach (var child in node.Children)
             {
 
                 res = GetLowestNode(child, currentLowest);
@@ -101,11 +109,11 @@ namespace WpfAppGraphs
         public TNode RemoveNodeFormTree(TNode node)
         {
             TNode current = node;
-            foreach (var child in current.children)
+            foreach (var child in current.Children)
             {
                 if (child.label == node.label)
                 {
-                    current.children.RemoveAll(x => x.label == node.label);
+                    current.Children.RemoveAll(x => x.label == node.label);
                 }
                 RemoveNodeFormTree(child);
 

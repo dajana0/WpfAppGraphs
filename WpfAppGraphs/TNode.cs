@@ -48,6 +48,14 @@ namespace WpfAppGraphs
             Children.Add(node);
             return node;
         }
+        public void AddChild(TNode child)
+        {
+            child.Parent = this ;
+            //var node = new TNode(label) { Parent = this };
+            //Children.Add(node);
+            Children.Add(child);
+            //return node;
+        }
         public void RemoveChild(TNode node)
         {
 

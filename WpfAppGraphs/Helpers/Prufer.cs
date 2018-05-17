@@ -46,30 +46,53 @@ namespace WpfAppGraphs.Helpers
 
         public TNode decode(List<int> sequence)
         {
+
             TNode root = new TNode(sequence.FirstOrDefault());
+
             List<int> b = new List<int>();
-            for(int x = 1; x <= sequence.Count + 2; x++)
+            for(int x =1; x <= sequence.Count + 2; x++)
             {
                 b.Add(x);
             }
             List<int> copySequence = sequence.ToList();
-
-          //  for(int x = 0; x <= sequence.Count + 3; x++)
-            while(b.Count>2)
+            List<TNode> allNodes = new List<TNode>();
+            allNodes.Add(root);
+          
+            while(sequence.Count !=0)
             {
-                int node = b.Where(y => !sequence.Any(y2 => y2 == y)).Min();
-                TNode nodeToLink = root.FindChild(sequence.First());
-                if(nodeToLink == null)
+                int minNodeInb = b.Where(y => !sequence.Any(y2 => y2 == y)).Min();
+                int firstInSequence = sequence.First();
+
+                TNode nodeToLink = FindNodeInList(allNodes, firstInSequence);
+                TNode x2 = FindNodeInList(allNodes, minNodeInb);
+                if (nodeToLink == null)
                 {
-                    nodeToLink = root.FindChild(b.First());
-                    nodeToLink.AddChild(sequence.First());
+                    nodeToLink = new TNode(firstInSequence);
+                    if (x2 == null) {
+                        nodeToLink.AddChild(minNodeInb);
+                        allNodes.Add(nodeToLink);
+                    }
+                    else
+                    {
+                        nodeToLink.AddChild(x2);
+                    }
+                    // 
+                    // allNodes.Add(nodeToLink);
                 }
                 else
                 {
-                    nodeToLink.AddChild(node);
+                    if(x2 == null)
+                    {
+                        nodeToLink.AddChild(minNodeInb);
+                    }
+                    else
+                    {
+                        nodeToLink.AddChild(x2);
+                    }
                 }
+
                 sequence.Remove(sequence.First());
-                b.Remove(node);
+                b.Remove(minNodeInb);
             }
 
             TNode lastChild = root.FindChild(b.First());
@@ -86,5 +109,18 @@ namespace WpfAppGraphs.Helpers
                 
             return root;
         }
+
+        private TNode FindNodeInList(List<TNode> list, int label)
+        {
+            TNode result;
+            foreach (TNode node in list)
+            {
+                result = node.FindChild(label);
+                if (result != null)
+                    return result;
+            }
+            return null;
+        }
     }
 }
+//5,3,5,3,5

@@ -48,8 +48,8 @@ namespace WpfAppGraphs
            
             List<int> sequence = new List<int>() {5,3,5,3,5};
                 Prufer pruf = new Prufer();
-                TNode result = pruf.decode(sequence);
-            graph.Items.Add(result);
+              //  TNode result = pruf.decode(sequence);
+           // graph.Items.Add(result);
         }
         // TNode tree;
 
@@ -58,7 +58,7 @@ namespace WpfAppGraphs
         {
             
             string[] arr = (sender as TextBox).Text.Split(',').ToArray();
-            if (arr.Length < 3) return;
+            if (arr.Length < 2) return;
             List<int> sequence = new List<int>() ;
             foreach (string item in arr)
             {

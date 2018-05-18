@@ -75,7 +75,7 @@ namespace WpfAppGraphs.Helpers
                     }
                     else
                     {
-                        x2.AddChild(nodeToLink);
+                        nodeToLink.AddChild(x2);
                     }
                 }
                 else
@@ -94,27 +94,46 @@ namespace WpfAppGraphs.Helpers
                 b.Remove(minNodeInb);
             }
 
-            TNode lastChild = root.FindChild(b.First());
-            if(lastChild != null)
+            TNode lastChild = FindNodeInList(allNodes, b.First());
+            TNode lastlink = FindNodeInList(allNodes, b[1]);
+            if(lastChild == null)
             {
-                lastChild.AddChild(b[1]);
+                lastChild = new TNode(b.First());
             }
-            else
+            if(lastlink == null)
             {
-                root.FindChild(b[1]).AddChild(b.First());
+                lastlink = new TNode(b[1]);
             }
-                    
-            return FindRootInList(allNodes);
+            lastlink.AddChild(lastChild);
+            // if (lastChild != null)
+            // {
+
+            //     lastChild.AddChild(lastlink);
+            // }
+            // else
+            // {
+            //     root.FindChild(b[1]).AddChild(b.First());
+            //}
+
+            return recursiveFindRoot(root);//FindRootInList(allNodes);
         }
         private TNode FindRootInList(List<TNode> list)
         {
-
+            TNode result;
             foreach (TNode node in list)
             {
-                if(node.Parent == null) return node;
-
+                result = recursiveFindRoot(node);
+                if (result != null) return result;
             }
             return null;
+        }
+
+        private TNode recursiveFindRoot(TNode node)
+        {
+            if (node.Parent == null)
+                return node;
+            var result = recursiveFindRoot(node.Parent);
+            return result;
         }
 
 
@@ -161,6 +180,8 @@ namespace WpfAppGraphs.Helpers
             TNode result;
             foreach (TNode node in list)
             {
+                if (node.label == label)
+                    return node;
                 result = node.FindChild(label);
                 if (result != null)
                     return result;

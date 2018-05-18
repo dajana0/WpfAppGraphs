@@ -36,7 +36,7 @@ namespace WpfAppGraphs
             }
             if(Parent !=null && Parent.label == label)
             {
-                return this;
+                return Parent;
             }
             foreach (TNode child in Children)
             {
@@ -52,18 +52,20 @@ namespace WpfAppGraphs
             Children.Add(node);
             return node;
         }
-        public void AddChild(TNode child)
+        public TNode AddChild(TNode child)
         {
-            if (child.Parent == null)
-            {
+            //if (child.Parent == null)
+            //{
                 child.Parent = this;
                 Children.Add(child);
-            }
-            else
-            {
-                Parent = child;
-                child.Children.Add(this);
-            }
+                return this;
+            //}
+           // else
+           // {
+           //     Parent = child;
+           //     child.Children.Add(this);
+           //     return child;
+           // }
             
         }
         public void RemoveChild(TNode node)

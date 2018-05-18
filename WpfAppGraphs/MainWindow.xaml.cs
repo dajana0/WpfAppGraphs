@@ -56,8 +56,9 @@ namespace WpfAppGraphs
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            
-            string[] arr = (sender as TextBox).Text.Split(',').ToArray();
+            if (String.IsNullOrEmpty((sender as TextBox).Text) || (sender as TextBox).Text[(sender as TextBox).Text.Length - 1] != ';') return;
+            string seq = (sender as TextBox).Text.Remove((sender as TextBox).Text.Length - 1);
+            string[] arr = seq.Split(',').ToArray();
             if (arr.Length < 2) return;
             List<int> sequence = new List<int>() ;
             foreach (string item in arr)

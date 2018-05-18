@@ -34,6 +34,10 @@ namespace WpfAppGraphs
             {
                 return this;
             }
+            if(Parent !=null && Parent.label == label)
+            {
+                return this;
+            }
             foreach (TNode child in Children)
             {
                 var res = child.FindChild(label);
@@ -50,11 +54,17 @@ namespace WpfAppGraphs
         }
         public void AddChild(TNode child)
         {
-            child.Parent = this ;
-            //var node = new TNode(label) { Parent = this };
-            //Children.Add(node);
-            Children.Add(child);
-            //return node;
+            if (child.Parent == null)
+            {
+                child.Parent = this;
+                Children.Add(child);
+            }
+            else
+            {
+                Parent = child;
+                child.Children.Add(this);
+            }
+            
         }
         public void RemoveChild(TNode node)
         {

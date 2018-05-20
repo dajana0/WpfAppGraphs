@@ -193,6 +193,8 @@ namespace WpfAppGraphs.Helpers
                     child = new TNode(childLabel);
                 }
 
+                
+
                 parent.AddChild(child);
                 if(parent != root)
                     reminidingNodes.Add(parent);
@@ -200,16 +202,25 @@ namespace WpfAppGraphs.Helpers
                 a.Remove(a.First());
                 b.Remove(minb);
             }
-            TNode last = root.FindChild(b[0]);
-            if (last == null)
+       
+            TNode childLast = null;
+            TNode parentLast = root.FindChild(b[0]);
+            if (parentLast == null)
             {
-                root.FindChild(b[1]).AddChild(b[0]);
-            }
-            else
-            {
-                last.AddChild(b[1]);
+                parentLast = root.FindChild(b[1]);
             }
 
+            childLast = root.FindChild(parentLast.label == b[0] ? b[1] : b[0]);
+            if(childLast == null)
+            {
+                childLast = FindNodeInList(reminidingNodes, parentLast.label == b[0] ? b[1] : b[0]);
+            }
+            if(childLast == null)
+            {
+                childLast = new TNode(parentLast.label == b[0] ? b[1] : b[0]);
+            }
+            
+            parentLast.AddChild(childLast);
 
             return root;
         }

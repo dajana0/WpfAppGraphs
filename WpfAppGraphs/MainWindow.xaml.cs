@@ -67,7 +67,7 @@ namespace WpfAppGraphs
                     sequence.Add(int.Parse(item));
             }
             Prufer pruf = new Prufer();
-            TNode result = pruf.decode(sequence);
+            TNode result = pruf.decode5(sequence);
             graph.Items.Clear();
             graph.Items.Add(result);
 

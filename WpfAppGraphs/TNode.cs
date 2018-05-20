@@ -54,18 +54,14 @@ namespace WpfAppGraphs
         }
         public TNode AddChild(TNode child)
         {
-            //if (child.Parent == null)
-            //{
-                child.Parent = this;
-                Children.Add(child);
-                return this;
-            //}
-           // else
-           // {
-           //     Parent = child;
-           //     child.Children.Add(this);
-           //     return child;
-           // }
+            if (child.Parent != null)
+            {
+                child.Parent.RemoveChild(child);
+                child.AddChild(child.Parent);
+            }
+            child.Parent = this;
+            Children.Add(child);
+            return this;
             
         }
         public void RemoveChild(TNode node)

@@ -128,135 +128,77 @@ namespace WpfAppGraphs.Helpers
             }
 
             TNode root = new TNode(1);
-            List<TNode> reminidingNodes = new List<TNode>();
+            HashSet<TNode> reminidingNodes = new HashSet<TNode>();
             while (b.Count != 2)
             {
-                int smallestInb = b.Where(y => !a.Any(y2 => y2 == y)).Min();
-                int firstInA = a.First();
-                bool isInA = true;
-                bool isInB = true;
-                TNode node = root.FindChild(firstInA);
+                int minb = b.Where(y => !a.Any(y2 => y2 == y)).Min();
+                int firstA = a.First();
+
                 TNode parent = null;
                 TNode child = null;
+
+                TNode node = root.FindChild(firstA);
+                //sprawdzenie w root A
                 if (node == null)
                 {
-                    isInA = false;
-                    node = root.FindChild(smallestInb);
+                    node = root.FindChild(minb);
                 }
-                else
+
+                //sprawdzenie w root B
+                if (node == null)
+                {
+                    node = FindNodeInList(reminidingNodes, minb);
+                }
+                //sprawdzenie czy istnieje w liscie min b 
+                if (node == null)
+                {
+                    node = FindNodeInList(reminidingNodes, firstA);
+                }
+                //sprawdzenie czy istnieje w liście firstA
+                if (node != null)
                 {
                     parent = node;
                 }
 
-                if (node == null)
+
+                //jeśli nie istnieje rodzic stwórz go
+                if (parent == null)
                 {
-                    isInB = false;
-                    if (firstInA < smallestInb)
+                    if (firstA < minb)
                     {
-                        parent = new TNode(firstInA);
+                        parent = new TNode(firstA);
                     }
                     else
                     {
-                        parent = new TNode(smallestInb);
+                        parent = new TNode(minb);
                     }
+                }
+                //jeśli nie istnieje dziecko stwórz go
+                int childLabel = 0;
+                if (parent.label == firstA)
+                {
+                    childLabel = minb;
                 }
                 else
                 {
-                    if (parent == null)
-                        parent = node;
+                    childLabel = firstA;
                 }
-                bool IsnodeAinList = false;
-                bool IsnodeBinList = false;
-                bool childInList = false;
-                if (isInA == false && isInB == false)
+                child = root.FindChild(childLabel);
+                if(child == null)
                 {
-                    if (node == null)
-                    {
-                        node = FindNodeInList(reminidingNodes, smallestInb);
-
-                    }
-                    if (node == null)
-                    {
-                        IsnodeBinList = false;
-                        node = FindNodeInList(reminidingNodes, firstInA);
-                    }
-                    else
-                    {
-                        parent = node;
-                        IsnodeBinList = true;
-                    }
-                    if (node == null)
-                    {
-                        IsnodeAinList = false;
-                        if (firstInA < smallestInb)
-                        {
-                            parent = new TNode(firstInA);
-                        }
-                        else
-                        {
-                            parent = new TNode(smallestInb);
-                        }
-                    }
-                    else
-                    {
-                        IsnodeAinList = true;
-                        parent = node;
-                    }
+                    child = FindNodeInList(reminidingNodes, childLabel);
                 }
-                if( isInA && isInB)
+                if(child == null)
                 {
-                    child = FindNodeInList(reminidingNodes, smallestInb);
-                    if(child == null)
-                    {
-                        child = new TNode(smallestInb);
-                    }
+                    child = new TNode(childLabel);
                 }
 
-                if ((isInA && isInB == false) || (isInB && isInA == false))
-                {
-                    if (isInA)
-                    {
-                        child = FindNodeInList(reminidingNodes, smallestInb);
-                        if (child == null)
-                        {
-                            child = new TNode(smallestInb);
-                        }
-                    }
-                    if (isInB)
-                    {
-                        child = FindNodeInList(reminidingNodes, firstInA);
-                        if (child == null)
-                        {
-                            child = new TNode(firstInA);
-                        }
-                    }
-                    childInList = true;
-                }
-
-
-                if (!isInA && !isInB && !IsnodeAinList && !IsnodeBinList)
-                {
-                    if (firstInA < smallestInb)
-                        parent.AddChild(smallestInb);
-                    else
-                        parent.AddChild(firstInA);
+                parent.AddChild(child);
+                if(parent != root)
                     reminidingNodes.Add(parent);
-                }
-                
-                else if ((isInA && isInB )||childInList)
-                {
-                    parent.AddChild(child);
-                }
-                else if (isInA || IsnodeAinList)
-                {
-                    parent.AddChild(smallestInb);
-                }
-                else if (isInB || IsnodeBinList)
-                {
-                    parent.AddChild(firstInA);
-                }
+
                 a.Remove(a.First());
-                b.Remove(smallestInb);
+                b.Remove(minb);
             }
             TNode last = root.FindChild(b[0]);
             if (last == null)
@@ -292,6 +234,19 @@ namespace WpfAppGraphs.Helpers
 
 
 
+        private TNode FindNodeInList(HashSet<TNode> list, int label)
+        {
+            TNode result;
+            foreach (TNode node in list)
+            {
+                if (node.label == label)
+                    return node;
+                result = node.FindChild(label);
+                if (result != null)
+                    return result;
+            }
+            return null;
+        }
         private TNode FindNodeInList(List<TNode> list, int label)
         {
             TNode result;

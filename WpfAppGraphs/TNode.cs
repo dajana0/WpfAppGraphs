@@ -136,6 +136,10 @@ namespace WpfAppGraphs
             }
             return current;
         }
+        public override int GetHashCode()
+        {
+            return label.GetHashCode();
+        }
 
 
     }
